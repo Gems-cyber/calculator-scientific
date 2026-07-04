@@ -43,9 +43,22 @@ object ExpressionEvaluator {
                     i++
                 }
 
-                ch.isDigit() || ch == '.' -> {
+                (ch.isDigit() || ch == '.') ||
+                        (
+                                ch == '-' &&
+                                        (
+                                                i == 0 ||
+                                                        expression[i - 1] == '(' ||
+                                                        isOperator(expression[i - 1])
+                                                )
+                                ) -> {
 
                     val number = StringBuilder()
+
+                    if (ch == '-') {
+                        number.append('-')
+                        i++
+                    }
 
                     while (
                         i < expression.length &&
