@@ -6,6 +6,10 @@ import kotlin.math.sqrt
 object ExpressionEvaluator {
 
     fun evaluate(expression: String): Double {
+        val fixedExpression = expression
+            .replace(Regex("""(\d)\("""), "$1*(")
+            .replace(Regex("""\)(\d)"""), ")*$1")
+            .replace(Regex("""\)\("""), ")*(")
 
         val values = Stack<Double>()
         val operators = Stack<Char>()
@@ -13,10 +17,9 @@ object ExpressionEvaluator {
 
         var i = 0
 
-        while (i < expression.length) {
+        while (i < fixedExpression.length) {
 
-            val ch = expression[i]
-
+            val ch = fixedExpression[i]
             when {
 
                 ch == ' ' -> {
@@ -28,8 +31,8 @@ object ExpressionEvaluator {
                     val name = StringBuilder()
 
                     while (
-                        i < expression.length &&
-                        expression[i].isLetter()
+                        i <fixedExpression.length &&
+                        fixedExpression[i].isLetter()
                     ) {
                         name.append(expression[i])
                         i++
@@ -48,8 +51,8 @@ object ExpressionEvaluator {
                                 ch == '-' &&
                                         (
                                                 i == 0 ||
-                                                        expression[i - 1] == '(' ||
-                                                        isOperator(expression[i - 1])
+                                                        fixedExpression[i - 1] == '(' ||
+                                                        isOperator(fixedExpression[i - 1])
                                                 )
                                 ) -> {
 
@@ -60,11 +63,9 @@ object ExpressionEvaluator {
                         i++
                     }
 
-                    while (
-                        i < expression.length &&
-                        (expression[i].isDigit() || expression[i] == '.')
-                    ) {
-                        number.append(expression[i])
+                    while ( i < fixedExpression.length && (fixedExpression[i].isDigit() || fixedExpression[i] == '.') )
+                    {
+                        number.append(fixedExpression[i])
                         i++
                     }
 
