@@ -240,10 +240,17 @@ class CalculatorEngine {
 
 
     private fun formatResult(result: Double): String {
-        return if (result % 1.0 == 0.0) {
-            result.toLong().toString()
+
+        val cleanResult =
+            if (kotlin.math.abs(result) < 1E-10)
+                0.0
+            else
+                result
+
+        return if (cleanResult % 1.0 == 0.0) {
+            cleanResult.toLong().toString()
         } else {
-            result.toString()
+            cleanResult.toString()
         }
     }
 private fun error(): String {
